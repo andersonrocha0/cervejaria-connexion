@@ -19,6 +19,19 @@ paths:
     get:
       operationId: server.controllers.cervejas_controller.get_cervejas
       summary: Retorna todas as cervejas disponíveis da API
+      parameters:
+        - in: query
+          name: teor_alcoolico_min
+          description: Valor mínimo de teor alcóolico
+          required: false
+          type: number
+          format: double
+        - in: query
+          name: teor_alcoolico_max
+          description: Valor máximo de teor alcóolico
+          required: false
+          type: number
+          format: double
       responses:
         200:
           description: Lista de cervejas
@@ -39,6 +52,60 @@ paths:
       responses:
         201:
           description: Nova cerveja cadastrada
+          schema:
+            $ref: "#/definitions/Cerveja"
+  /cervejas/{id_cerveja}:
+    get:
+      operationId: server.controllers.cervejas_controller.get_cerveja
+      summary: Retorna a cerveja correspondente ao id
+      parameters:
+        - in: path
+          name: id_cerveja
+          description: Identificador da cerveja
+          required: true
+          type: integer
+          format: "int64"
+      responses:
+        200:
+          description: Cerveja correspondente ao id
+          schema:
+            $ref: "#/definitions/Cerveja"
+        404:
+          description: Cerveja não encontrada
+    delete:
+      operationId: server.controllers.cervejas_controller.delete_cerveja
+      summary: Remove a cerveja correspondente ao id
+      parameters:
+        - in: path
+          name: id_cerveja
+          description: Identificador da cerveja
+          required: true
+          type: integer
+          format: "int64"
+      responses:
+        204:
+          description: Cerveja removida
+          schema:
+            $ref: "#/definitions/Cerveja"
+    put:
+      operationId: server.controllers.cervejas_controller.put_cerveja
+      summary: Atualiza a cerveja correspondente ao id
+      parameters:
+        - in: path
+          name: id_cerveja
+          description: Identificador da cerveja
+          required: true
+          type: integer
+          format: "int64"
+        - in: body
+          name: cerveja_input
+          description: Dados da nova cerveja
+          required: true
+          schema:
+            $ref: "#/definitions/CervejaInput"
+      responses:
+        200:
+          description: Cerveja atualizada
           schema:
             $ref: "#/definitions/Cerveja"
 definitions:
