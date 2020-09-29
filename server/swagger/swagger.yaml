@@ -1,0 +1,67 @@
+swagger: '2.0'
+info:
+  title: API de Cervejas
+  version: "0.1"
+  description: Exemplo de uma API de cervejas
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /ping:
+    get:
+      operationId: server.controllers.keep_alive_controller.ping
+      summary: Verifica se o sistema está disponível
+      responses:
+        200:
+          description: Retorna pong
+  /cervejas:
+    get:
+      operationId: server.controllers.cervejas_controller.get_cervejas
+      summary: Retorna todas as cervejas disponíveis da API
+      responses:
+        200:
+          description: Lista de cervejas
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Cerveja"
+    post:
+      operationId: server.controllers.cervejas_controller.post_cerveja
+      summary: Cadastra uma nova cerveja
+      parameters:
+        - in: body
+          name: cerveja_input
+          description: Dados da nova cerveja
+          required: true
+          schema:
+            $ref: "#/definitions/CervejaInput"
+      responses:
+        201:
+          description: Nova cerveja cadastrada
+          schema:
+            $ref: "#/definitions/Cerveja"
+definitions:
+  CervejaInput:
+    type: object
+    properties:
+      nome:
+        type: string
+      estilo:
+        type: string
+      teor_alcoolico:
+        type: number
+        format: double
+  Cerveja:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      nome:
+        type: string
+      estilo:
+        type: string
+      teor_alcoolico:
+        type: number
+        format: double
