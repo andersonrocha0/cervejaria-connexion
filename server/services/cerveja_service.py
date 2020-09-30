@@ -1,4 +1,5 @@
-from server import Cerveja, cervejas
+from server.models.cerveja import Cerveja, CervejaEntity
+from server.repositories import cerveja_repository
 
 
 def get_cerveja_entre_min_max(cerveja: Cerveja, teor_min, teor_max):
@@ -7,24 +8,17 @@ def get_cerveja_entre_min_max(cerveja: Cerveja, teor_min, teor_max):
 
 
 def get_cervejas(teor_alcoolico_min=None, teor_alcoolico_max=None):
-    cervejas_para_retornar = cervejas
-    if teor_alcoolico_min is not None and teor_alcoolico_max is not None:
-        cervejas_para_retornar = list(
-            filter(lambda cerveja: get_cerveja_entre_min_max(cerveja, teor_alcoolico_min, teor_alcoolico_max),
-                   cervejas))
-
+    cervejas_para_retornar = cerveja_repository.find_all_cervejas(teor_alcoolico_min, teor_alcoolico_max)
     return cervejas_para_retornar
 
 
 def post_cerveja(cerveja_input):
-    cerveja = Cerveja(
-        estilo=cerveja_input['estilo'],
-        nome=cerveja_input['nome'],
-        teor_alcoolico=cerveja_input['teor_alcoolico'],
-        id=get_max_id_mais_um()
-    )
-    cervejas.append(cerveja)
-    return cerveja
+    cerveja_entity = CervejaEntity()
+    cerveja_entity.estilo = cerveja_input['estilo']
+    cerveja_entity.nome = cerveja_input['nome']
+    cerveja_entity.teor_alcoolico = cerveja_input['teor_alcoolico']
+
+    return cerveja_repository.save_obj(cerveja_entity)
 
 
 def get_max_id_mais_um() -> int:
@@ -32,30 +26,23 @@ def get_max_id_mais_um() -> int:
 
 
 def get_cerveja(id_cerveja):
-    cerveja = next(filter(lambda x: x.id == id_cerveja, cervejas), None)
+    cerveja = cerveja_repository.get_obj_by_id(CervejaEntity, id_cerveja)
     return cerveja
 
 
 def delete_cerveja(id_cerveja):
-    i = 0
-    remover = False
-    for cerveja in cervejas:
-        if id_cerveja == cerveja.id:
-            remover = True
-            break
-        i = i + 1
-
-    if remover:
-        del cervejas[i]
+    cerveja_repository.remove_obj_by_id(CervejaEntity, id_cerveja)
 
 
 def put_cerveja(id_cerveja, cerveja_input):
-    cerveja = get_cerveja(id_cerveja)
-    if cerveja is None:
+    cerveja_entity = cerveja_repository.get_entity_by_id(CervejaEntity, id_cerveja)
+    if cerveja_entity is None:
         return None
 
-    cerveja.estilo = cerveja_input['estilo']
-    cerveja.nome = cerveja_input['nome']
-    cerveja.teor_alcoolico = cerveja_input['teor_alcoolico']
+    cerveja_entity.estilo = cerveja_input['estilo']
+    cerveja_entity.nome = cerveja_input['nome']
+    cerveja_entity.teor_alcoolico = cerveja_input['teor_alcoolico']
+
+    cerveja = cerveja_repository.save_obj(cerveja_entity)
 
     return cerveja
