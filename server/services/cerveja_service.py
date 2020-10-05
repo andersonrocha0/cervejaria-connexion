@@ -21,10 +21,6 @@ def post_cerveja(cerveja_input):
     return cerveja_repository.save_obj(cerveja_entity)
 
 
-def get_max_id_mais_um() -> int:
-    return max([c.id for c in cervejas]) + 1 if len(cervejas) > 0 else 1
-
-
 def get_cerveja(id_cerveja):
     cerveja = cerveja_repository.get_obj_by_id(CervejaEntity, id_cerveja)
     return cerveja
