@@ -22,7 +22,7 @@ def handle_cerveja(cerveja):
 
 
 def delete_cerveja(id_cerveja):
-    cerveja_service.delete_cerveja(id_cerveja), 204
+    return cerveja_service.delete_cerveja(id_cerveja), 204
 
 
 def put_cerveja(id_cerveja, cerveja_input):

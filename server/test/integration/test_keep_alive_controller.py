@@ -1,13 +1,7 @@
-import connexion
-from flask_testing import TestCase
+from server.test.integration import BaseIntegrationTest
 
 
-class TestKeepAliveApi(TestCase):
-
-    def create_app(self):
-        app = connexion.App(__name__, specification_dir='../../swagger/')
-        app.add_api('swagger.yaml')
-        return app.app
+class TestKeepAliveApi(BaseIntegrationTest):
 
     def test_api_keep_alive(self):
         response = self.client.open(
